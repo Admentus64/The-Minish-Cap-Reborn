@@ -10,6 +10,8 @@
 #include "object.h"
 #include "room.h"
 #include "save.h"
+#include "item.h"
+#include "message.h"
 
 typedef struct {
     /*0x00*/ Entity base;
@@ -19,6 +21,7 @@ typedef struct {
     /*0x82*/ u8 unk_82;
     /*0x83*/ u8 unk_83;
     /*0x84*/ u8 unk_84;
+    /*0x85*/ s8 ticks;
 } RupeeLikeEntity;
 
 extern void sub_080293DC(RupeeLikeEntity* this);
@@ -92,6 +95,21 @@ void RupeeLike_OnDeath(RupeeLikeEntity* this) {
 }
 
 void RupeeLike_OnGrabbed(RupeeLikeEntity* this) {
+}
+
+bool32 RupeeLike_StealItem(u32 item) {
+    u8 i;
+    
+    if (GetInventoryValue(item) == 1) {
+        for (i = 0; i < 4; i++)
+            if (gSave.stats.equipped[i] == ITEM_SHIELD)
+                gSave.stats.equipped[i] = ITEM_NONE;
+
+        SetInventoryValue(item, 0);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 void sub_080293DC(RupeeLikeEntity* this) {
@@ -172,7 +190,7 @@ void sub_0802953C(RupeeLikeEntity* this) {
     if (super->timer != 0) {
         super->timer--;
     }
-    if (((super->subtimer > 0x2d) || (gSave.stats.rupees == 0)) && (super->timer == 0)) {
+    if (((super->subtimer > 0x2d) || (this->ticks >= 10) ) && (super->timer == 0)) {
         sub_080296D8(this);
     } else {
         ResetActiveItems();
@@ -188,6 +206,12 @@ void sub_0802953C(RupeeLikeEntity* this) {
                 ModRupees(gUnk_080CCC44[super->type]);
                 this->unk_84 = 1;
             }
+            else if (RupeeLike_StealItem(ITEM_SHIELD)) {
+                MessageFromTarget(TEXT_INDEX(TEXT_ITEM_GET, 0x78));
+                this->unk_84 = 1;
+            }
+            else ModHealth(-1);
+            this->ticks++;
         }
     }
 }
@@ -255,6 +279,7 @@ void sub_080296D8(RupeeLikeEntity* this) {
     gPlayerEntity.base.speed = 0x140;
     super->action = 5;
     super->subtimer = 60;
+    this->ticks = 0;
     super->collisionMask |= 3;
     if ((s8)super->iframes == 0) {
         super->iframes = 0xf4;

@@ -9,17 +9,10 @@ gTranslations:: @ 08109214
 	.4byte translation
 	.4byte translation
 	.4byte translation
-.ifdef EU
 	.4byte translationFrench
 	.4byte translationGerman
 	.4byte translationSpanish
 	.4byte translationItalian
-.else
-	.4byte translation
-	.4byte translation
-	.4byte translation
-	.4byte translation
-.endif
 
 @ text.c
 gUnk_08109230:: @ 08109230

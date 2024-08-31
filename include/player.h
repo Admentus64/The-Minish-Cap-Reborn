@@ -275,6 +275,8 @@ typedef enum {
     INPUT_DOWN = 0x800,
     INPUT_ANY_DIRECTION = 0xf00,
     INPUT_FUSE = 0x1000,       // L, where is it set? sub_080782C0
+    INPUT_USE_SELECT = 0x2000, // SELECT
+    INPUT_USE_R      = 0x4000, // R
     INPUT_LIFT_THROW = 0x8000, // R, IsTryingToPickupObject, sub_08076518
 } PlayerInputState;
 
@@ -553,7 +555,8 @@ typedef struct {
     /*0xaa*/ u8 attachedBeetleCount; /**< Count of the Beetles attached to the player. */
     /*0xab*/ u8 lastSwordMove;       /**< The last move that has been performed with the sword. @see SwordMove */
     /*0xac*/ u16 skills;             /**< Bitfield of skills @see PlayerSkill */
-    /*0xae*/ u8 pad[2];
+    /*0xae*/ u8 isSecondaryItems;
+    /*0xab*/ u8 pad[1];
 } PlayerState;
 
 typedef struct {
@@ -569,11 +572,11 @@ typedef struct {
     /*0x09*/ u8 _hasAllFigurines;
     /*0x0a*/ u8 charm;
     /*0x0b*/ u8 picolyteType;
-    /*0x0c*/ u8 equipped[2];
+    /*0x0c*/ u8 filler14[2];
     /*0x0e*/ u8 bottles[4];
     /*0x12*/ u8 effect;
     /*0x13*/ u8 hasAllFigurines;
-    /*0x14*/ u8 filler14[4];
+    /*0x14*/ u8 equipped[4];
     /*0x18*/ u16 rupees;
     /*0x1a*/ u16 shells;
     /*0x1c*/ u16 charmTimer;
@@ -584,6 +587,8 @@ typedef struct {
 
 #define SLOT_A 0
 #define SLOT_B 1
+#define SLOT_LA 2
+#define SLOT_LB 3
 
 typedef struct {
     /*0x0*/ u8 field_0x0;
@@ -642,6 +647,7 @@ void CreateEzloHint(u32, u32);
 // game.c
 /** @see Item */
 /*EquipSlot*/ u32 IsItemEquipped(u32 itemId);
+/*EquipSlot*/ u32 IsSetItemEquipped(u32 itemId);
 /** @see Item */
 u32 GetInventoryValue(u32);
 /** @see Item */

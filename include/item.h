@@ -153,7 +153,7 @@ typedef enum {
 } Item;
 
 /** Slot that the item is equipped in. */
-typedef enum { EQUIP_SLOT_A, EQUIP_SLOT_B, EQUIP_SLOT_NONE } EquipSlot;
+typedef enum { EQUIP_SLOT_A, EQUIP_SLOT_B, EQUIP_SLOT_LA, EQUIP_SLOT_LB, EQUIP_SLOT_NONE } EquipSlot;
 
 /** Function used to create the item. */
 typedef enum {

@@ -175,6 +175,7 @@ u32 GiveItem(Item item, u32 param_2) {
             break;
         case 0x0f:
             AddKinstoneToBag(param_2);
+            SoundReq(SFX_103);
             break;
         case 0x10:
             gSave.stats.walletType++;
@@ -213,8 +214,8 @@ void ModShells(s32 shells) {
     shells += gSave.stats.shells;
     if (shells < 0) {
         shells = 0;
-    } else if (999 < shells) {
-        shells = 999;
+    } else if (9999 < shells) {
+        shells = 9999;
     }
     gSave.stats.shells = shells;
 }
@@ -259,40 +260,69 @@ EquipSlot IsItemEquipped(u32 itemId) {
         equipSlot = EQUIP_SLOT_A;
     } else if (itemId == gSave.stats.equipped[SLOT_B]) {
         equipSlot = EQUIP_SLOT_B;
+    } else if (itemId == gSave.stats.equipped[SLOT_LA]) {
+        equipSlot = EQUIP_SLOT_LA;
+    } else if (itemId == gSave.stats.equipped[SLOT_LB]) {
+        equipSlot = EQUIP_SLOT_LB;
     } else {
         equipSlot = EQUIP_SLOT_NONE;
     }
     return equipSlot;
 }
 
+EquipSlot IsSetItemEquipped(u32 itemId) {
+    EquipSlot equipSlot;
+
+    if (gPlayerState.isSecondaryItems) {
+        if (itemId == gSave.stats.equipped[SLOT_LA])
+            equipSlot = EQUIP_SLOT_LA;
+        else if (itemId == gSave.stats.equipped[SLOT_LB])
+            equipSlot = EQUIP_SLOT_LB;
+        else equipSlot = EQUIP_SLOT_NONE;
+    }
+    else {
+        if (itemId == gSave.stats.equipped[SLOT_A])
+            equipSlot = EQUIP_SLOT_A;
+        else if (itemId == gSave.stats.equipped[SLOT_B])
+            equipSlot = EQUIP_SLOT_B;
+        else equipSlot = EQUIP_SLOT_NONE;
+    }
+    
+    return equipSlot;
+}
+
 void PutItemOnSlot(u32 itemId) {
     EquipSlot equipSlot;
     u32 itemId2 = itemId;
-    if (itemId2 < 0x47) {
+    u8 i;
+    u8 emptySlots = 0;
+    
+    if (itemId2 < 0x47)
         SetInventoryValue(0, 1);
-    }
-    if (itemId2 - 1 < 0x1f) {
-        equipSlot = EQUIP_SLOT_NONE;
-        if (gSave.stats.equipped[SLOT_A] == ITEM_NONE) {
-            equipSlot = EQUIP_SLOT_A;
-        } else if (gSave.stats.equipped[SLOT_B] == ITEM_NONE) {
-            equipSlot = EQUIP_SLOT_B;
-        }
-        if (equipSlot == EQUIP_SLOT_NONE) {
-            u32 temp = gItemMetaData[itemId2].menuSlot;
-            if (temp == gItemMetaData[gSave.stats.equipped[SLOT_A]].menuSlot) {
-                equipSlot = EQUIP_SLOT_A;
-            } else {
-                if (temp == gItemMetaData[gSave.stats.equipped[SLOT_B]].menuSlot) {
-                    equipSlot = EQUIP_SLOT_B;
-                }
-            }
+    
+    if (itemId2 - 1 < 0x1f)
+        for (i = 0; i <= 2; i += 2) {
+            equipSlot = EQUIP_SLOT_NONE;
+            if (gSave.stats.equipped[SLOT_A + i] == ITEM_NONE)
+                equipSlot = EQUIP_SLOT_A + i;
+            else if (gSave.stats.equipped[SLOT_B + i] == ITEM_NONE)
+                equipSlot = EQUIP_SLOT_B + i;
+            
             if (equipSlot == EQUIP_SLOT_NONE) {
-                return;
+                u32 temp = gItemMetaData[itemId2].menuSlot;
+                if (temp == gItemMetaData[gSave.stats.equipped[SLOT_A + i]].menuSlot)
+                    equipSlot = EQUIP_SLOT_A + i;
+                else if (temp == gItemMetaData[gSave.stats.equipped[SLOT_B + i]].menuSlot)
+                    equipSlot = EQUIP_SLOT_B + i;
+                
+                if (equipSlot == EQUIP_SLOT_NONE)
+                    continue;
             }
+            else emptySlots++;
+            
+            if (emptySlots != 2)
+                ForceEquipItem(itemId2, equipSlot);
         }
-        ForceEquipItem(itemId2, equipSlot);
-    }
 }
 
 void ForceEquipItem(u32 itemId, u32 equipSlot) {
@@ -301,7 +331,9 @@ void ForceEquipItem(u32 itemId, u32 equipSlot) {
     u32 replacedItem;
 
     if ((itemId - 1 < 0x1f) && (equipSlot < EQUIP_SLOT_NONE)) {
-        otherItemSlot = equipSlot == EQUIP_SLOT_A;
+        otherItemSlot = equipSlot == ( (equipSlot > EQUIP_SLOT_B) ? EQUIP_SLOT_LA : EQUIP_SLOT_A);
+        if (equipSlot > EQUIP_SLOT_B)
+            otherItemSlot += EQUIP_SLOT_LA;
         replacedItem = gSave.stats.equipped[equipSlot];
         otherItem = gSave.stats.equipped[otherItemSlot];
         if (gItemMetaData[otherItem].menuSlot == gItemMetaData[itemId].menuSlot) {
@@ -472,6 +504,11 @@ u32 CreateRandomItemDrop(Entity* arg0, u32 arg1) {
             if (gSave.stats.rupees <= 10) {
                 droptable.s.rupee5++;
             }
+            if (gSave.difficulty >= 2) {
+                droptable.s.hearts = -999;
+                droptable.s.fairy  = -999;
+            }
+            
             ptr2 = &gDroptableModifiers[DROPTABLE_NONE];
             r0 = gSave.stats.hasAllFigurines;
             ptr3 = &gDroptableModifiers[DROPTABLE_NONE];
@@ -512,6 +549,10 @@ extern u8 gUnk_080FE1DD[3][0x40];
 u32 CreateItemDrop(Entity* arg0, u32 itemId, u32 itemParameter) {
     u32 adjustedParam = itemParameter;
     Entity* itemEntity;
+    
+    if (gSave.difficulty >= 2)
+        if (itemId == ITEM_HEART || itemId == ITEM_FAIRY)
+            itemId = ITEM_RUPEE1;
 
     switch (itemId) {
         case ITEM_ENEMY_BEETLE:

@@ -3456,10 +3456,19 @@ void SurfaceAction_14(PlayerEntity* this) {
 void SurfaceAction_CloneTile(PlayerEntity* this) {
     if (gPlayerState.chargeState.action == 4) {
         u32 item, n, i;
-        if (ItemIsSword(gSave.stats.equipped[SLOT_A])) {
-            item = gSave.stats.equipped[SLOT_A];
-        } else {
-            item = gSave.stats.equipped[SLOT_B];
+        if (gPlayerState.isSecondaryItems) {
+            if (ItemIsSword(gSave.stats.equipped[SLOT_LA])) {
+                item = gSave.stats.equipped[SLOT_LA];
+            } else {
+                item = gSave.stats.equipped[SLOT_LB];
+            }
+        }
+        else {
+            if (ItemIsSword(gSave.stats.equipped[SLOT_A])) {
+                item = gSave.stats.equipped[SLOT_A];
+            } else {
+                item = gSave.stats.equipped[SLOT_B];
+            }
         }
         switch (item) {
             case 1:

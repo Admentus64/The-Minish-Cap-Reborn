@@ -244,10 +244,7 @@ void LikeLike_ReleasePlayer(LikeLikeEntity* this) {
 
 void sub_080281A0(LikeLikeEntity* this) {
     super->subtimer = 25;
-    if (LikeLike_StealItem(ITEM_MIRROR_SHIELD)) {
-        this->stolenItem = ITEM_MIRROR_SHIELD;
-        MessageFromTarget(TEXT_INDEX(TEXT_ITEM_GET, 0x78));
-    } else if (LikeLike_StealItem(ITEM_SHIELD)) {
+    if (LikeLike_StealItem(ITEM_SHIELD)) {
         this->stolenItem = ITEM_SHIELD;
         MessageFromTarget(TEXT_INDEX(TEXT_ITEM_GET, 0x78));
     } else {
@@ -256,21 +253,18 @@ void sub_080281A0(LikeLikeEntity* this) {
 }
 
 bool32 LikeLike_StealItem(u32 item) {
-    bool32 ret = FALSE;
+    u8 i;
+    
     if (GetInventoryValue(item) == 1) {
-        if (ItemIsShield(gSave.stats.equipped[SLOT_A])) {
-            gSave.stats.equipped[SLOT_A] = ITEM_NONE;
-        }
-
-        if (ItemIsShield(gSave.stats.equipped[SLOT_B])) {
-            gSave.stats.equipped[SLOT_B] = ITEM_NONE;
-        }
+        for (i = 0; i < 4; i++)
+            if (gSave.stats.equipped[i] == ITEM_SHIELD)
+                gSave.stats.equipped[i] = ITEM_NONE;
 
         SetInventoryValue(item, 0);
-        ret = TRUE;
+        return TRUE;
     }
 
-    return ret;
+    return FALSE;
 }
 
 void LikeLike_ReturnStolenItem(u32 item) {

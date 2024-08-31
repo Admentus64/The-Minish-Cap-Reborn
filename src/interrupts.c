@@ -284,7 +284,8 @@ static void HandlePlayerLife(Entity* this) {
         threshold = 8;
 
     if (gSave.stats.health <= threshold) {
-        gRoomVars.needHealthDrop = TRUE;
+        if (gSave.difficulty == 0)
+            gRoomVars.needHealthDrop = TRUE;
         if ((gHUD.hideFlags == HUD_HIDE_NONE) && gRoomTransition.frameCount % 90 == 0) {
             EnqueueSFX(SFX_LOW_HEALTH);
         }

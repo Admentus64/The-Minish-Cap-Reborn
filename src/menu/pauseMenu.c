@@ -376,6 +376,7 @@ void PauseMenu_ItemMenu_Update(void) {
     static const u8 gUnk_08128BF4[] = { 14, 15, 2, 0 };
     u32 item;
     u32 menuSlot;
+    u32 slot;
     const ItemMenuTableEntry* entry;
 
     if (sub_080A51F4()) {
@@ -383,6 +384,18 @@ void PauseMenu_ItemMenu_Update(void) {
         menuSlot = gMenu.field_0x3;
 
         entry = &gItemMenuTable[menuSlot];
+        
+        if (gInput.heldKeys & SELECT_BUTTON) {
+            if (!gPlayerState.isSecondaryItems)
+                gHUD.unk_13 = gHUD.unk_14 = 0x7f;
+            gPlayerState.isSecondaryItems = 1;
+        }
+        else {
+            if (gPlayerState.isSecondaryItems)
+                gHUD.unk_13 = gHUD.unk_14 = 0x7f;
+            gPlayerState.isSecondaryItems = 0;
+        }
+        
         switch (gInput.newKeys) {
             case A_BUTTON:
                 if (menuSlot == MENU_SLOT_SAVE_BUTTON) {
@@ -396,7 +409,9 @@ void PauseMenu_ItemMenu_Update(void) {
                 }
             case B_BUTTON:
                 if (gPauseMenu.items[menuSlot] != 0) {
-                    u32 slot = !!(gInput.newKeys ^ A_BUTTON);
+                    slot = !!(gInput.newKeys ^ A_BUTTON);
+                    if (gPlayerState.isSecondaryItems)
+                        slot += SLOT_LA;
                     ForceEquipItem(gPauseMenu.items[menuSlot], slot);
                     SoundReq(SFX_TEXTBOX_SELECT);
                 }
@@ -527,19 +542,16 @@ void PauseMenu_ItemMenu_Draw(void) {
         gOamCmd._8 = 0x800;
         DrawDirect(sub_080A5384_draw_constant0, 0x22);
     }
-    i = GetMenuSlotForItem(gSave.stats.equipped[SLOT_A]);
-    if (i < MENU_SLOT_COUNT) {
-        entry = &gItemMenuTable[i];
-        gOamCmd.x = entry->x;
-        gOamCmd.y = entry->y;
-        DrawDirect(sub_080A5384_draw_constant0, 3);
-    }
-    i = GetMenuSlotForItem(gSave.stats.equipped[SLOT_B]);
-    if (i < MENU_SLOT_COUNT) {
-        entry = &gItemMenuTable[i];
-        gOamCmd.x = entry->x;
-        gOamCmd.y = entry->y;
-        DrawDirect(sub_080A5384_draw_constant0, 3);
+    
+    // Draw equipped items
+    for (tmp = (gPlayerState.isSecondaryItems ? SLOT_LA : SLOT_A); tmp <= (gPlayerState.isSecondaryItems ? SLOT_LB : SLOT_B); tmp++) {
+        i = GetMenuSlotForItem(gSave.stats.equipped[tmp]);
+        if (i < MENU_SLOT_COUNT) {
+            entry = &gItemMenuTable[i];
+            gOamCmd.x = entry->x;
+            gOamCmd.y = entry->y;
+            DrawDirect(sub_080A5384_draw_constant0, 3);
+        }
     }
 }
 
@@ -877,11 +889,11 @@ void sub_080A57F4(void) {
 
     if (gGenericMenu.unk10.a[3] == 0x3f) {
         puVar10 = puVar8 + 3;
-        gOamCmd.x = puVar10->unk6 + 8;
+        gOamCmd.x = puVar10->unk6 + 11;
         gOamCmd.y = puVar10->unk7 + 8;
         shells = gSave.stats.shells;
-
-        for (index = 0; index < 3; index++) {
+        
+        for (index = 0; index < 4; index++) {
             gOamCmd._8 = shells % 10 + 0x800;
             DrawDirect(0, 1);
             shells /= 10;

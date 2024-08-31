@@ -226,18 +226,21 @@ void sub_0801B804(PlayerItemBoomerangEntity* this) {
     EquipSlot equipSlot;
     u32 uVar1;
 
-    equipSlot = IsItemEquipped(ITEM_MAGIC_BOOMERANG);
+    equipSlot = IsSetItemEquipped(ITEM_MAGIC_BOOMERANG);
     switch (equipSlot) {
         case EQUIP_SLOT_A:
+        case EQUIP_SLOT_LA:
             uVar1 = 1;
             break;
         case EQUIP_SLOT_B:
+        case EQUIP_SLOT_LB:
             uVar1 = 2;
             break;
         case EQUIP_SLOT_NONE:
             uVar1 = 0;
             break;
     }
+    
 
     if ((uVar1 & gPlayerState.playerInput.heldInput) == 0) {
         this->unk_80 = 1;

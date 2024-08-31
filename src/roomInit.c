@@ -4444,7 +4444,7 @@ void sub_0804E150(void) {
     u32 uVar3;
 
     pTileData = gUnk_080EED2C;
-    uVar3 = 1 << gSave.global_progress;
+    uVar3 = 1 << (gSave.global_progress == 9 ? 8 : gSave.global_progress);
     for (; pTileData[1] != 0; pTileData += 3) {
         if ((pTileData[0] & uVar3) != 0) {
             SetTile(pTileData[2], pTileData[1], LAYER_BOTTOM);

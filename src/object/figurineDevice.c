@@ -666,20 +666,20 @@ void FigurineDevice_Draw(FigurineDeviceEntity* this) {
 
 void FigurineDevice_GetChanceBasedOffFigurineCount(FigurineDeviceEntity* this) {
     if (gSave.stats.figurineCount < 50) {
-        if (this->chance < 15) {
-            this->chance = 15;
+        if (this->chance < 45) {
+            this->chance = 45;
         }
     } else if (gSave.stats.figurineCount < 80) {
-        if (this->chance < 12) {
-            this->chance = 12;
+        if (this->chance < 36) {
+            this->chance = 36;
         }
     } else if (gSave.stats.figurineCount < 110) {
-        if (this->chance < 9) {
-            this->chance = 9;
+        if (this->chance < 27) {
+            this->chance = 27;
         }
     } else {
-        if (this->chance < 6) {
-            this->chance = 6;
+        if (this->chance < 18) {
+            this->chance = 18;
         }
     }
 }

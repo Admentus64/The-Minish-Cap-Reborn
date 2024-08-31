@@ -45,8 +45,11 @@ typedef struct {
     /*0x05*/ u8 unk5;
     /*0x06*/ u8 unk6;
     /*0x07*/ u8 unk7;
-    /*0x08*/ s8 saveStatus[3];
-    /*0x0b*/ SaveFile saves[3];
+    /*0x08*/ u8 difficulty;
+    /*0x09*/ u8 blinkTimer;
+    /*0x0A*/ u8 blinkState;
+    /*0x0B*/ s8 saveStatus[3];
+    /*0x0E*/ SaveFile saves[3];
 } struct_02019EE0;
 extern struct_02019EE0 gMapDataBottomSpecial;
 // TODO size: 0x8000 from ClearTileMaps?

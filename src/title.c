@@ -71,6 +71,7 @@ static const SaveFile gDemoSave = {
     .initialized = 1,
     .msg_speed = 1,
     .brightness = 1,
+    .difficulty = 0,
     .global_progress = 1,
     .map_hints = 0x1F,
     .windcrests = 0x00013780,

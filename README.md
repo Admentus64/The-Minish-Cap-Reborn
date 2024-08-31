@@ -1,3 +1,44 @@
+# The Legend of Zelda: The Minish Cap Redux
+
+### Features
+
+- Bug fixes and improvements from the US version
+- EU languages restored
+- Ezlo hint removed upon resuming file
+- Item button shortcuts added
+	- L + R: Pegasus Boots
+	- L + SELECT: Ocarina
+	- L + A/B: Use secondary items
+- Hold SELECT in the Item Menu to equip secondary items
+- Mirror Shield can be obtained earlier in the game and requires less waiting
+- Oracles offer the Joy Butterfly Fusion earlier
+- The oracle left behind will also offer her homemade charm
+- Improved some re-occuring text boxes
+- Removed several Ezlo tutorials
+- Shells limit cap raised to 9999
+- Rupee Like has been overhauled
+- Press L in the file select options menu to change Hero Mode difficulty level
+- Minimum figurine chances are raised
+- Library is no longer clossed off after obtaining the Four Sword
+
+### Credits
+
+#### Redux
+- Main Hacking:				Admentus
+- Decompilation Assistance:		Henny022 & Catobat
+
+#### Additional Options
+- Miscellaneous Options:		Admentus
+- US Backport Fixes:			Prof. 9
+- "The Wind Waker" Voices:		Weario
+
+#### Language Restorations
+- English, Formatting and Coding:	Admentus
+- French:				Ticamus
+- German:				GhostlyDark
+- Spanish:				ShadowOne333
+- Italian:				Rulesless
+
 # The Legend of Zelda: The Minish Cap
 
 

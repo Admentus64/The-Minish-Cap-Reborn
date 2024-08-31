@@ -158,11 +158,8 @@ const SaveHeader sDefaultSettings = {
     .saveFileId = 0,
     .msg_speed = 1,
     .brightness = 1,
-#ifdef EU
+    .difficulty = 0,
     .language = 2, // TODO in EU 2 is english?
-#else
-    .language = GAME_LANGUAGE,
-#endif
     .name = "LINK",
     .invalid = 0,
     .initialized = 0,
@@ -202,14 +199,7 @@ void InitSaveHeader(void) {
 }
 
 /*static*/ u32 CheckHeaderValid(void) {
-    if ((gSaveHeader->signature != SIGNATURE) || (gSaveHeader->saveFileId >= NUM_SAVE_SLOTS) ||
-        (gSaveHeader->msg_speed >= MAX_MSG_SPEED) || (gSaveHeader->brightness >= MAX_BRIGHTNESS)
-#ifdef EU
-        || (gSaveHeader->language <= GAME_LANGUAGE) || (gSaveHeader->language > NUM_LANGUAGES)
-#else
-        || (gSaveHeader->language != GAME_LANGUAGE)
-#endif
-        || (gSaveHeader->invalid))
+    if ((gSaveHeader->signature != SIGNATURE) || (gSaveHeader->saveFileId >= NUM_SAVE_SLOTS) || (gSaveHeader->msg_speed >= MAX_MSG_SPEED) || (gSaveHeader->brightness >= MAX_BRIGHTNESS) || (gSaveHeader->difficulty >= MAX_DIFFICULTY) || (gSaveHeader->language <= GAME_LANGUAGE) || (gSaveHeader->language > NUM_LANGUAGES) || (gSaveHeader->invalid))
         return FALSE;
 
     return TRUE;

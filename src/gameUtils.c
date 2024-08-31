@@ -429,7 +429,7 @@ void InitRoomTransition(void) {
 bool32 CanDispEzloMessage(void) {
     s32 tmp = PL_STATE_WALK;
 
-    if (!(gInput.heldKeys & SELECT_BUTTON) || gPlayerState.controlMode != CONTROL_ENABLED ||
+    if ((gInput.heldKeys & L_BUTTON) || !(gInput.heldKeys & SELECT_BUTTON) || gPlayerState.controlMode != CONTROL_ENABLED ||
         gPauseMenuOptions.disabled || gHUD.hideFlags != HUD_HIDE_NONE)
         return FALSE;
 
@@ -895,7 +895,7 @@ void BiggoronTimerHandler(u32* timer) {
 }
 
 void InitBiggoronTimer(void) {
-    gSave.biggoron_timer = 36000;
+    gSave.biggoron_timer = 10;
 }
 
 void ResetTmpFlags(void) {

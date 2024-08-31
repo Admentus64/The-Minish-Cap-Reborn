@@ -20,8 +20,7 @@
 
 typedef struct {
     /*0x00*/ Entity base;
-    /*0x68*/ u8 unk_68;
-    /*0x69*/ u8 unk_69;
+    /*0x68*/ u8 storeEquipment[4];
 } NPC4EEntity;
 
 typedef struct {
@@ -186,13 +185,17 @@ Item NPC4E_GetItemWithSwordUpgraded(Item itemId) {
 }
 
 void NPC4E_SaveEquippedItems(NPC4EEntity* this) {
-    this->unk_68 = gSave.stats.equipped[SLOT_A];
-    this->unk_69 = gSave.stats.equipped[SLOT_B];
+    u8 i;
+    
+    for (i = 0; i <= SLOT_LB; i++)
+        this->storeEquipment[i]  = gSave.stats.equipped[i];
 }
 
 void NPC4E_RestoreEquippedItems(NPC4EEntity* this) {
-    ForceEquipItem(NPC4E_GetItemWithSwordUpgraded(this->unk_68), EQUIP_SLOT_A);
-    ForceEquipItem(NPC4E_GetItemWithSwordUpgraded(this->unk_69), EQUIP_SLOT_B);
+    u8 i;
+    
+    for (i = 0; i <= SLOT_LB; i++)
+        ForceEquipItem(NPC4E_GetItemWithSwordUpgraded(this->storeEquipment[i]),  i);
 }
 
 void sub_0806DC7C(void) {

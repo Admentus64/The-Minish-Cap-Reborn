@@ -14,6 +14,8 @@
 #include "room.h"
 #include "sound.h"
 #include "tiles.h"
+#include "item.h"
+#include "save.h"
 
 typedef struct {
     /*0x00*/ Entity base;
@@ -315,6 +317,11 @@ static void BreakPot(PotEntity* this, Entity* parent) {
 u32 sub_0808288C(Entity* this, u32 form, u32 arg2, u32 arg3) {
     ItemOnGroundEntity* entity;
     u32 result = 0;
+    
+    if (gSave.difficulty >= 2)
+        if (form == ITEM_HEART || form == ITEM_FAIRY)
+            form = ITEM_RUPEE1;
+    
     switch (form) {
         case 0xFF:
             result = 0;

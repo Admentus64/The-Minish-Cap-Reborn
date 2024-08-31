@@ -577,6 +577,8 @@ void InitPauseMenu(void) {
     MemClear(gUnk_020344A0, sizeof(gUnk_020344A0));
     MenuFadeIn(1, 0);
     SetBgmVolume(0x80);
+    gPlayerState.isSecondaryItems = 0;
+    gHUD.unk_13 = gHUD.unk_14 = 0x7f;
 }
 
 void sub_080A4DA8(u32 param_1) {

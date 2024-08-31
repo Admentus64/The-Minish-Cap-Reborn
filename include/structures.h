@@ -10,6 +10,7 @@ typedef struct {
     u8 saveFileId;
     u8 msg_speed;
     u8 brightness;
+    u8 difficulty;
     u8 language;
     u8 name[6];
     u8 invalid;

@@ -141,12 +141,21 @@ void UpdatePlayerInput(void) {
 }
 
 u32 ConvInputToState(u32 keys) {
-    u32 result;
+    u32 result = 0;
+    
     if (keys & L_BUTTON) {
-        result = INPUT_FUSE;
-    } else {
-        result = 0;
+        result |= INPUT_FUSE;
+        
+        if (!gPlayerState.isSecondaryItems)
+            gHUD.unk_13 = gHUD.unk_14 = 0x7f;
+        gPlayerState.isSecondaryItems = 1;
     }
+    else {
+        if (gPlayerState.isSecondaryItems)
+            gHUD.unk_13 = gHUD.unk_14 = 0x7f;
+        gPlayerState.isSecondaryItems = 0;
+    }
+    
     if (keys & R_BUTTON) {
         result |= INPUT_CONTEXT;
         result |= INPUT_LIFT_THROW;
@@ -171,6 +180,9 @@ u32 ConvInputToState(u32 keys) {
     }
     if (keys & DPAD_DOWN) {
         result |= INPUT_DOWN;
+    }
+    if (keys & SELECT_BUTTON) {
+        result |= INPUT_USE_SELECT;
     }
     return result;
 }

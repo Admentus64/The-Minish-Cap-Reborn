@@ -55,7 +55,8 @@ typedef struct {
     /*0x001*/ u8 initialized;                /**< save file is initialized */
     /*0x002*/ u8 msg_speed;                  /**< message speed setting */
     /*0x003*/ u8 brightness;                 /**< brightness setting */
-    /*0x004*/ u8 filler4[2];                 /**< unused filler */
+    /*0x004*/ u8 difficulty;                 /**< difficulty setting */
+    /*0x005*/ u8 filler4[1];                 /**< unused filler */
     /*0x006*/ u8 saw_staffroll;              /**< beat the game and watched the credits */
     /*0x007*/ u8 dws_barrel_state;           /**< state of the big barrel in DWS, 0 or 2 */
     /*0x008*/ u8 global_progress;            /**< @see UpdateGlobalProgress */

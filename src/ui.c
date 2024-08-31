@@ -683,7 +683,7 @@ void ButtonUIElement_Action1(UIElement* element) {
 u32 sub_0801CC80(UIElement* element) {
     u8 type = element->type;
     u32 buttonId = (type ^ 3) != 0;
-    u32 itemId = gSave.stats.equipped[buttonId];
+    u32 itemId = gSave.stats.equipped[gPlayerState.isSecondaryItems ? (buttonId + SLOT_LA) : buttonId];
     if (ItemIsBottle(itemId)) {
         itemId = gSave.stats.bottles[itemId - ITEM_BOTTLE1];
     }

@@ -3,10 +3,12 @@
 #include "item.h"
 #include "object.h"
 #include "sound.h"
+#include "save.h"
 
 extern s8 gUnk_08126EEC[];
 extern Entity* CreatePlayerItemForItemIfNotExists(ItemBehavior*);
 extern void sub_0807AB44(Entity*, s32, s32);
+u8 GetLanternFromSlot(u8, u8);
 void sub_08075A0C(ItemBehavior*, u32);
 void sub_08075ADC(ItemBehavior*, u32);
 void sub_08075B54(ItemBehavior*, u32);
@@ -22,16 +24,29 @@ void ItemLantern(ItemBehavior* this, u32 index) {
     stateFuncs[this->stateID](this, index);
 }
 
+u8 GetLanternFromSlot(u8 behaviourId, u8 isSecondary) {
+    if (gSave.stats.equipped[(isSecondary ? 1 : 0) * 2] == behaviourId)
+        return (isSecondary ? 1 : 0) * 2;
+    if (gSave.stats.equipped[(isSecondary ? 1 : 0) * 2 + 1] == behaviourId)
+        return (isSecondary ? 1 : 0) * 2 + 1;
+    return EQUIP_SLOT_NONE;
+}
+
 void sub_08075A0C(ItemBehavior* this, u32 index) {
     Entity* object;
-    EquipSlot equipSlot;
+    EquipSlot equipSlot1;
+    EquipSlot equipSlot2;
     s8* tmp;
-    equipSlot = IsItemEquipped(this->behaviorId);
-    if (gPlayerState.heldObject != 0 || gPlayerState.queued_action == PLAYER_ROLL || gPlayerState.jump_status != 0 ||
-        gPlayerState.item != NULL || (gPlayerState.flags & PL_MINISH) != 0) {
-        ForceEquipItem(ITEM_LANTERN_OFF, equipSlot);
+    
+    equipSlot1 = GetLanternFromSlot(this->behaviorId, FALSE);
+    equipSlot2 = GetLanternFromSlot(this->behaviorId, TRUE);
+    
+    if (gPlayerState.heldObject != 0 || gPlayerState.queued_action == PLAYER_ROLL || gPlayerState.jump_status != 0 || gPlayerState.item != NULL || (gPlayerState.flags & PL_MINISH) != 0) {
+        ForceEquipItem(ITEM_LANTERN_OFF, equipSlot1);
+        ForceEquipItem(ITEM_LANTERN_OFF, equipSlot2);
         gPlayerState.flags &= ~PL_USE_LANTERN;
-        ForceEquipItem(ITEM_LANTERN_OFF, equipSlot);
+        ForceEquipItem(ITEM_LANTERN_OFF, equipSlot1);
+        ForceEquipItem(ITEM_LANTERN_OFF, equipSlot2);
         DeleteItemBehavior(this, index);
     } else {
         this->priority |= 0x80;
@@ -39,7 +54,8 @@ void sub_08075A0C(ItemBehavior* this, u32 index) {
         CreatePlayerItemForItemIfNotExists(this);
         sub_0806F948(&gPlayerEntity.base);
         this->behaviorId = 0x10;
-        ForceEquipItem(ITEM_LANTERN_ON, equipSlot);
+        ForceEquipItem(ITEM_LANTERN_ON, equipSlot1);
+        ForceEquipItem(ITEM_LANTERN_ON, equipSlot2);
         tmp = &gUnk_08126EEC[gPlayerEntity.base.animationState & 6];
         object = CreateObjectWithParent(&gPlayerEntity.base, LAMP_PARTICLE, 1, 0);
         if (object != NULL) {
@@ -53,12 +69,7 @@ void sub_08075A0C(ItemBehavior* this, u32 index) {
 void sub_08075ADC(ItemBehavior* this, u32 index) {
     u32 bVar1;
 
-    if (
-#ifndef EU
-        gPlayerState.item != NULL ||
-#endif
-        (this->playerFrame & 1) == 0 || (gPlayerState.flags & (PL_DISABLE_ITEMS | PL_CAPTURED)) != 0 ||
-        sub_08079D48() == 0) {
+    if ((this->playerFrame & 1) == 0 || (gPlayerState.flags & (PL_DISABLE_ITEMS | PL_CAPTURED)) != 0 || sub_08079D48() == 0) {
         this->animPriority = 0;
         this->stateID++;
         gPlayerState.flags |= PL_USE_LANTERN;
@@ -75,21 +86,23 @@ void sub_08075ADC(ItemBehavior* this, u32 index) {
 
 void sub_08075B54(ItemBehavior* this, u32 index) {
     u32 bVar1;
-    EquipSlot equipSlot;
+    EquipSlot equipSlot1;
+    EquipSlot equipSlot2;
     Entity* object;
     s8* tmp;
 
     if ((gPlayerState.flags & (PL_CAPTURED | PL_DISABLE_ITEMS)) == 0) {
-        equipSlot = IsItemEquipped(this->behaviorId);
-        if (!(((IsItemActivatedThisFrame(this) == 0) && (equipSlot < EQUIP_SLOT_NONE)) ||
-              (gPlayerState.jump_status != 0))) {
-            ForceEquipItem(ITEM_LANTERN_OFF, equipSlot);
+        equipSlot1 = GetLanternFromSlot(this->behaviorId, FALSE);
+        equipSlot2 = GetLanternFromSlot(this->behaviorId, TRUE);
+        
+        if (!(((IsItemActivatedThisFrame(this) == 0) && ( (equipSlot1 < EQUIP_SLOT_NONE) || (equipSlot2 < EQUIP_SLOT_NONE))) ||(gPlayerState.jump_status != 0))) {
+            ForceEquipItem(ITEM_LANTERN_OFF, equipSlot1);
+            ForceEquipItem(ITEM_LANTERN_OFF, equipSlot2);
             gPlayerState.flags &= ~PL_USE_LANTERN;
             DeleteItemBehavior(this, index);
             SoundReq(SFX_ITEM_LANTERN_OFF);
         } else {
-            if (((gPlayerState.queued_action != PLAYER_ROLL) && (gPlayerEntity.base.frameIndex < 0x37)) &&
-                ((u16)gPlayerEntity.base.spriteIndex == 6)) {
+            if (((gPlayerState.queued_action != PLAYER_ROLL) && (gPlayerEntity.base.frameIndex < 0x37)) && ((u16)gPlayerEntity.base.spriteIndex == 6)) {
                 tmp = &gUnk_08126EEC[gPlayerEntity.base.animationState & 6];
 
                 if ((gPlayerState.jump_status == 0) &&

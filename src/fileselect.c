@@ -337,19 +337,23 @@ void SetFileSelectState(FileSelectState mode) {
 void LoadOptionsFromSave(u32 idx) {
     u8 msg_speed;
     u8 brightness;
+    u8 difficulty;
 
     if (idx >= NUM_SAVE_SLOTS) {
         // these apply to the language selection screen
         msg_speed = 1;
         brightness = 1;
+        difficulty = 0;
     } else {
         SaveFile* saveFile = &gMapDataBottomSpecial.saves[idx];
         msg_speed = saveFile->msg_speed;
         brightness = saveFile->brightness;
+        difficulty = saveFile->difficulty;
     }
 
     gSaveHeader->msg_speed = msg_speed;
     gSaveHeader->brightness = brightness;
+    gSaveHeader->difficulty = difficulty;
     gUsedPalettes = 0xffffffff;
 }
 
@@ -406,7 +410,7 @@ static void HandleFileScreenEnter(void) {
     MemClear(&gHUD, sizeof(gHUD));
     MemClear(&gMapDataBottomSpecial, sizeof(gMapDataBottomSpecial));
     gMapDataBottomSpecial.unk3 = 7;
-    gMapDataBottomSpecial.unk6 = gSaveHeader->language > LANGUAGE_EN ? 3 : 0;
+    gMapDataBottomSpecial.unk6 = gSaveHeader->language > LANGUAGE_EN ? 0 : 0;
     MemClear(&gUI, sizeof(gUI));
     gUI.lastState = 8;
     SetFileSelectState(STATE_NONE);
@@ -981,6 +985,7 @@ void sub_08050EB8(void) {
     save = &gMapDataBottomSpecial.saves[gMapDataBottomSpecial.unk6];
     gMapDataBottomSpecial.unk4 = save->msg_speed;
     gMapDataBottomSpecial.unk5 = save->brightness;
+    gMapDataBottomSpecial.difficulty = save->difficulty;
     gMenu.column_idx = 0;
     gMenu.transitionTimer = 255;
     SetMenuType(1);
@@ -991,6 +996,7 @@ void sub_08050EF4(void) {
     u32 option;
     char column_idx;
     u8 mode;
+    u8 difficultyIcons[4] = { 0x24, 0x22, 0x23, 0x21 };
 
     if (gMapDataBottomSpecial.isTransitioning == 0) {
         SaveFile* currentFile = &gMapDataBottomSpecial.saves[gMapDataBottomSpecial.unk6];
@@ -1000,6 +1006,24 @@ void sub_08050EF4(void) {
             p_option = &currentFile->msg_speed;
         } else {
             p_option = &currentFile->brightness;
+        }
+        
+        gMapDataBottomSpecial.blinkTimer++;
+        if (gMapDataBottomSpecial.blinkTimer > 15) {
+            gMapDataBottomSpecial.blinkState = (gMapDataBottomSpecial.blinkState == 1) ? 0 : 1;
+            gMapDataBottomSpecial.blinkTimer = 0;
+        }
+        
+        gOamCmd._4 = 0;
+        gOamCmd._6 = 0;
+        gOamCmd._8 = 0x400;
+        gOamCmd.y  = 135;
+        
+        // Draw current Hero Model level
+        for (mode= 0; mode < 4; mode++)  {
+            gOamCmd.x = 140 + mode * 20;
+            if (currentFile->difficulty != mode || (currentFile->difficulty == mode && !gMapDataBottomSpecial.blinkState))
+                DrawDirect(0x145, difficultyIcons[mode]);
         }
 
         option = *p_option;
@@ -1024,13 +1048,16 @@ void sub_08050EF4(void) {
 
             case A_BUTTON:
             case START_BUTTON:
-                if (gMapDataBottomSpecial.unk4 != currentFile->msg_speed ||
-                    gMapDataBottomSpecial.unk5 != currentFile->brightness) {
+                if (gMapDataBottomSpecial.unk4 != currentFile->msg_speed || gMapDataBottomSpecial.unk5 != currentFile->brightness || gMapDataBottomSpecial.difficulty != currentFile->difficulty) {
                     mode = 2;
                     break;
                 }
             case B_BUTTON:
                 mode = 3;
+                break;
+            case L_BUTTON:
+                SoundReq(SFX_TEXTBOX_CHOICE);
+                currentFile->difficulty += (currentFile->difficulty < 3) ? 1 : -3;
                 break;
         }
 
@@ -1043,6 +1070,7 @@ void sub_08050EF4(void) {
                 case 3:
                     currentFile->msg_speed = gMapDataBottomSpecial.unk4;
                     currentFile->brightness = gMapDataBottomSpecial.unk5;
+                    currentFile->difficulty = gMapDataBottomSpecial.difficulty;
                     SoundReq(SFX_MENU_CANCEL);
                     break;
             }
@@ -1665,6 +1693,7 @@ void HandleFileStart(void) {
         gMenu.menuType = 1;
         gSaveHeader->msg_speed = gSave.msg_speed;
         gSaveHeader->brightness = gSave.brightness;
+        gSaveHeader->difficulty = gSave.difficulty;
         gMain.state = GAMETASK_MAIN;
         SetFade(FADE_IN_OUT | FADE_INSTANT, 8);
     }
@@ -1678,6 +1707,7 @@ void ResetSaveFile(u32 save_idx) {
     MemClear(save, sizeof(SaveFile));
     save->msg_speed = 1;
     save->brightness = 1;
+    save->difficulty = 0;
     save->stats.health = 24;
     save->stats.maxHealth = 24;
 }

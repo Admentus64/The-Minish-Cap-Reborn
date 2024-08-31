@@ -79,7 +79,7 @@ clean:
 # build ASM files
 # ===============
 
-ASINCLUDE := -I $(BUILD_DIR)/assets -I $(BUILD_DIR)/enum_include
+ASINCLUDE := -I assets -I $(BUILD_DIR)/assets -I $(BUILD_DIR)/enum_include
 ASFLAGS := -mcpu=arm7tdmi --defsym $(GAME_VERSION)=1 --defsym REVISION=$(REVISION) --defsym $(GAME_LANGUAGE)=1 $(ASINCLUDE)
 
 # TODO try solve this without the glob

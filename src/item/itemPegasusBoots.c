@@ -109,8 +109,12 @@ void sub_08076964(ItemBehavior* this, u32 index) {
                 if (entity != NULL) {
                     if (ItemIsSword(gSave.stats.equipped[SLOT_A]) != 0) {
                         uVar3 = gSave.stats.equipped[SLOT_A];
-                    } else {
+                    } else if (ItemIsSword(gSave.stats.equipped[SLOT_B]) != 0) {
                         uVar3 = gSave.stats.equipped[SLOT_B];
+                    } else if (ItemIsSword(gSave.stats.equipped[SLOT_LA]) != 0) {
+                        uVar3 = gSave.stats.equipped[SLOT_LA];
+                    } else {
+                        uVar3 = gSave.stats.equipped[SLOT_LB];
                     }
                     ((GenericEntity*)entity)->field_0x68.HALF.LO = uVar3;
                     return;

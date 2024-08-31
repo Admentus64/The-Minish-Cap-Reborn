@@ -245,7 +245,7 @@ void sub_08065370(Entity* this, ScriptExecutionContext* context) {
             break;
 #endif
         case ITEM_SHELLS30:
-            if (999 <= gSave.stats.shells) {
+            if (9999 <= gSave.stats.shells) {
                 MessageNoOverlap(TEXT_INDEX(TEXT_STOCKWELL, 0xe), this);
                 bVar1 = 0;
             }

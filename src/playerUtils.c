@@ -164,13 +164,32 @@ void UpdateActiveItems(PlayerEntity* this) {
 
     gPlayerState.shield_status &= 0xfe;
     gPlayerState.attack_status &= 0xf;
-    if (((gPlayerState.field_0x7 | gPlayerState.jump_status) & 0x80) == 0 && (gPlayerState.jump_status & 0x40) == 0 &&
-        gPlayerState.swim_state == 0 && IsAbleToUseItem(this) && !IsPreventedFromUsingItem()) {
-        CreateItemIfInputMatches(gSave.stats.equipped[SLOT_A], INPUT_USE_ITEM1, FALSE);
-        CreateItemIfInputMatches(gSave.stats.equipped[SLOT_B], INPUT_USE_ITEM2, FALSE);
+    if (((gPlayerState.field_0x7 | gPlayerState.jump_status) & 0x80) == 0 && (gPlayerState.jump_status & 0x40) == 0 && gPlayerState.swim_state == 0 && IsAbleToUseItem(this) && !IsPreventedFromUsingItem()) {
+        if (gPlayerState.isSecondaryItems) {
+            CreateItemIfInputMatches(gSave.stats.equipped[SLOT_LA], INPUT_USE_ITEM1, FALSE);
+            CreateItemIfInputMatches(gSave.stats.equipped[SLOT_LB], INPUT_USE_ITEM2, FALSE);
+            
+            if (GetInventoryValue(ITEM_OCARINA))
+                CreateItemIfInputMatches(ITEM_OCARINA, INPUT_USE_SELECT, FALSE);
+            
+            // L + R Dashing
+            if (GetInventoryValue(ITEM_PEGASUS_BOOTS) && (gPlayerState.playerInput.heldInput & INPUT_ACTION) ) {
+                ItemBehavior* item = CreateItem(ITEM_PEGASUS_BOOTS);
+                if (item != NULL) {
+                    item->priority = gItemDefinitions[ITEM_PEGASUS_BOOTS].priority;
+                    item->behaviorId = ITEM_PEGASUS_BOOTS;
+                    item->field_0x2[1] = INPUT_ACTION;
+                }
+            }
+        }
+        else {
+            CreateItemIfInputMatches(gSave.stats.equipped[SLOT_A], INPUT_USE_ITEM1, FALSE);
+            CreateItemIfInputMatches(gSave.stats.equipped[SLOT_B], INPUT_USE_ITEM2, FALSE);
+        }
+        
         IsTryingToPickupObject();
     }
-
+    
     for (index = 0; index < MAX_ACTIVE_ITEMS; index++) {
         if (gActiveItems[index].priority != 0) {
             ExecuteItemFunction(&gActiveItems[index], index);
@@ -179,11 +198,13 @@ void UpdateActiveItems(PlayerEntity* this) {
 }
 
 void CreateItemEquippedAtSlot(EquipSlot equipSlot) {
-    if (equipSlot == EQUIP_SLOT_A) {
+    if (equipSlot == EQUIP_SLOT_A)
         CreateItemIfInputMatches(gSave.stats.equipped[SLOT_A], INPUT_USE_ITEM1, TRUE);
-    } else {
+    else if (equipSlot == EQUIP_SLOT_B)
         CreateItemIfInputMatches(gSave.stats.equipped[SLOT_B], INPUT_USE_ITEM2, TRUE);
-    }
+    else if (equipSlot == EQUIP_SLOT_LA)
+        CreateItemIfInputMatches(gSave.stats.equipped[SLOT_LA], INPUT_USE_ITEM1, TRUE);
+    else CreateItemIfInputMatches(gSave.stats.equipped[SLOT_LB], INPUT_USE_ITEM2, TRUE);
 }
 
 bool32 IsAbleToUseItem(PlayerEntity* this) {
@@ -267,7 +288,7 @@ bool32 IsTryingToPickupObject(void) {
            (((gPlayerEntity.unk_79 != 0 || (gPlayerState.heldObject != 0)) ||
              ((gPlayerState.playerInput.newInput & INPUT_LIFT_THROW) != 0)))) &&
           (((sub_080789A8() != 0 || ((gPlayerState.playerInput.heldInput &
-                                      (INPUT_ANY_DIRECTION | INPUT_USE_ITEM1 | INPUT_USE_ITEM2)) == 0)))))) {
+                                      (INPUT_ANY_DIRECTION | INPUT_USE_ITEM1 | INPUT_USE_ITEM2 | INPUT_FUSE)) == 0)))))) {
         return FALSE;
     }
     item = CreateItem(ITEM_TRY_PICKUP_OBJECT);
@@ -367,12 +388,15 @@ ItemBehavior* CreateItem5(Item itemId) {
 
 void ResetLantern(void) {
     EquipSlot slot;
+    u8 i;
 
     DeleteItemBehavior(&gActiveItems[ACTIVE_ITEM_LANTERN], ACTIVE_ITEM_LANTERN);
     gPlayerState.flags &= ~PL_USE_LANTERN;
-    slot = IsItemEquipped(ITEM_LANTERN_ON);
-    if (slot != EQUIP_SLOT_NONE) {
-        ForceEquipItem(ITEM_LANTERN_OFF, slot);
+    
+    for (i = 0; i < 2; i++) {
+        slot = IsItemEquipped(ITEM_LANTERN_ON);
+        if (slot != EQUIP_SLOT_NONE)
+            ForceEquipItem(ITEM_LANTERN_OFF, slot);
     }
 }
 
@@ -622,14 +646,15 @@ bool32 IsItemActiveByInput(ItemBehavior* this, PlayerInputState input) {
     u32 val;
     Stats* stats = &gSave.stats;
     u32 id = this->behaviorId;
-    if (stats->equipped[SLOT_A] == id) {
+    if ( (!gPlayerState.isSecondaryItems && stats->equipped[SLOT_A] == id) || (gPlayerState.isSecondaryItems && stats->equipped[SLOT_LA] == id) ) {
         val = INPUT_USE_ITEM1;
-    } else if (stats->equipped[SLOT_B] == id) {
+    } else if ( (!gPlayerState.isSecondaryItems && stats->equipped[SLOT_B] == id) || (gPlayerState.isSecondaryItems && stats->equipped[SLOT_LB] == id) ) {
         val = INPUT_USE_ITEM2;
     } else {
         val = 0;
     }
-
+    if (gPlayerState.isSecondaryItems && (INPUT_FUSE & input) && (INPUT_ACTION & input) && GetInventoryValue(ITEM_PEGASUS_BOOTS) && this->behaviorId == ITEM_PEGASUS_BOOTS)
+        return TRUE;
     return (val & input) ? TRUE : FALSE;
 }
 
@@ -920,12 +945,23 @@ bool32 sub_08077FEC(u32 action) {
 
 bool32 sub_08078008(ChargeState* state) {
     Item swordType;
-    if (ItemIsSword(gSave.stats.equipped[SLOT_A]) != ITEM_NONE) {
-        swordType = gSave.stats.equipped[SLOT_A];
-    } else if (ItemIsSword(gSave.stats.equipped[SLOT_B]) != ITEM_NONE) {
-        swordType = gSave.stats.equipped[SLOT_B];
-    } else {
-        swordType = ITEM_NONE;
+    if (gPlayerState.isSecondaryItems) {
+        if (ItemIsSword(gSave.stats.equipped[SLOT_LA]) != ITEM_NONE) {
+            swordType = gSave.stats.equipped[SLOT_LA];
+        } else if (ItemIsSword(gSave.stats.equipped[SLOT_LB]) != ITEM_NONE) {
+            swordType = gSave.stats.equipped[SLOT_LB];
+        } else {
+            swordType = ITEM_NONE;
+        }
+    }
+    else {
+        if (ItemIsSword(gSave.stats.equipped[SLOT_A]) != ITEM_NONE) {
+            swordType = gSave.stats.equipped[SLOT_A];
+        } else if (ItemIsSword(gSave.stats.equipped[SLOT_B]) != ITEM_NONE) {
+            swordType = gSave.stats.equipped[SLOT_B];
+        } else {
+            swordType = ITEM_NONE;
+        }
     }
 
     if (swordType == ITEM_SMITH_SWORD || swordType == ITEM_GREEN_SWORD) {
@@ -1068,7 +1104,7 @@ void DetermineRButtonInteraction(void) {
                             return;
                         }
                     } else {
-                        if ((gPlayerState.framestate == PL_STATE_WALK) && (gPlayerState.mobility == 0)) {
+                        if ((gPlayerState.framestate == PL_STATE_WALK) && (gPlayerState.mobility == 0) && !gPlayerState.isSecondaryItems) {
                             rAction = R_ACTION_ROLL;
                         } else {
                             rAction = R_ACTION_NONE;
@@ -2584,10 +2620,10 @@ void DeleteClones(void) {
 }
 
 bool32 HasSwordEquipped(void) {
-    if (ItemIsSword((u32)gSave.stats.equipped[SLOT_A]) != 0) {
+    if (ItemIsSword((u32)gSave.stats.equipped[SLOT_A]) != 0 || ItemIsSword((u32)gSave.stats.equipped[SLOT_LA]) != 0) {
         return TRUE;
     } else {
-        return ItemIsSword((u32)gSave.stats.equipped[SLOT_B]);
+        return (ItemIsSword((u32)gSave.stats.equipped[SLOT_B]) || ItemIsSword((u32)gSave.stats.equipped[SLOT_LB]));
     }
 }
 

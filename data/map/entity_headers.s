@@ -1680,7 +1680,6 @@ Room_CrenelMinishPaths_CrenelWater:: @ 080D5AA8
 	.4byte sub_StateChange_CrenelMinishPaths_CrenelWater
 
 Entities_CrenelMinishPaths_Rainfall_0:: @ 080D5AC8
-	ezlo_hint x=8, y=4, rx=3, ry=9, msg=0xb1c, flag=0xc1
 	entity_list_end
 
 Entities_CrenelMinishPaths_Rainfall_1:: @ 080D5AE8
@@ -3454,7 +3453,7 @@ gUnk_080D8AC4:: @ 080D8AC4
 	npc_raw subtype=0x32, x=0x48, y=0xd8, paramA=0x1, script=script_GoronPunching
 	npc_raw subtype=0x32, x=0x68, y=0xd8, paramA=0x2, script=script_GoronPunching
 	npc_raw subtype=0x32, x=0x88, y=0xd8, paramA=0x3, script=script_GoronPunching
-	npc_raw subtype=0x32, x=0xa8, y=0xd8, paramA=0x4, script=script_GoronPunching
+	npc_raw subtype=0x32, x=0xa8, y=0xd8, paramA=0x5, script=script_GoronPunching
 	entity_list_end
 
 gUnk_080D8B24:: @ 080D8B24
@@ -7018,7 +7017,6 @@ Entities_DeepwoodShrine_PotBridge_0:: @ 080DE8D0
 	manager subtype=0x20, x=0x48, y=0x48, paramB=0x10c80500, paramC=0x261048
 	object_raw subtype=0x3, x=0xc8, y=0x48, paramA=0x1, paramC=0x80000000
 	manager subtype=0x5, x=0xa, y=0x6, paramB=0x12, paramC=0x80000001
-	ezlo_hint x=0xe, y=0x8, rx=0x3, ry=0x1, msg=0xb36, flag=0x25
 	manager subtype=0x1e, x=0x70, y=0xb0, paramB=0x100030, paramC=0x510000
 	entity_list_end
 
@@ -7043,7 +7041,6 @@ Room_DeepwoodShrine_PotBridge:: @ 080DE980
 	.4byte sub_StateChange_DeepwoodShrine_PotBridge
 
 Entities_DeepwoodShrine_DoubleStatue_0:: @ 080DE9A0
-	ezlo_hint x=0x6, y=0xa, rx=0xb, ry=0x1, msg=0xb33, flag=0x50
 	object_raw subtype=0x3, x=0x68, y=0x68, paramA=0x1, paramC=0x80000000
 	object_raw subtype=0x3, x=0xa8, y=0x68, paramA=0x1, paramC=0x80010000
 	object_raw subtype=0xc, x=0x88, y=0x58, paramA=0x1, paramC=0x84000000
@@ -7237,7 +7234,6 @@ Entities_DeepwoodShrine_Lever_0:: @ 080DEF80
 	object_raw subtype=0x54, x=0x108, y=0x24, paramB=0x200000, paramC=0x80000000
 	manager subtype=0x11, paramC=0x80000032
 	manager subtype=0x5, x=0xf, y=0x8, paramB=0x8b, paramC=0x320001
-	ezlo_hint x=0x1e, y=0x6, rx=0x3, ry=0x2, msg=0xb32, flag=0x33
 	object_raw subtype=0x32, x=0x88, y=0x88
 	object_raw subtype=0x5, x=0x118, y=0xd8, collision=1
 	object_raw subtype=0x5, x=0x38, y=0xc8, collision=1
@@ -7305,7 +7301,6 @@ Room_DeepwoodShrine_Entrance:: @ 080DF1B0
 
 Entities_DeepwoodShrine_Torch_0:: @ 080DF1D4
 	object_raw subtype=0x8, x=0xa8, y=0x28, paramA=0x8, paramC=0x3c0000
-	ezlo_hint x=0x12, y=0x6, rx=0x3, ry=0x1, msg=0xb6b, flag=0x55
 	object_raw subtype=0x3, x=0x68, y=0x68, paramC=0x380000
 	object_raw subtype=0x3, x=0x68, y=0xa8, paramC=0x390000
 	object_raw subtype=0x3, x=0xe8, y=0x68, paramC=0x3a0000
@@ -7673,7 +7668,6 @@ Entities_CaveOfFlames_AfterCane_0:: @ 080DFBD0
 	object_raw subtype=0x5, x=0x118, y=0x48, paramA=0x5f
 	object_raw subtype=0x5, x=0x118, y=0x98, paramA=0x5f
 	manager subtype=0x1e, x=0x50, y=0xc0, paramB=0x200070, paramC=0x3b0000
-	ezlo_hint x=0xa, y=0xe, rx=0x4, ry=0x4, msg=0xb68, flag=0x43
 	entity_list_end
 
 Entities_CaveOfFlames_AfterCane_1:: @ 080DFC70
@@ -8300,7 +8294,6 @@ Room_CaveOfFlames_PathBossKey2:: @ 080E11F0
 
 Entities_CaveOfFlames_Compass_0:: @ 080E1218
 	manager subtype=0xb, pool=0x0, paramB=0x8, paramC=0x310000
-	ezlo_hint x=0x6, y=0xa, rx=0x9, ry=0x2, msg=0xb27, flag=0x33
 	object_raw subtype=0xc, x=0x78, y=0x68, paramA=0x2, paramB=0x32, paramC=0x310000
 	object_raw subtype=0x8, x=0x28, y=0x58, paramA=0x3, paramC=0x31ffff
 	entity_list_end
@@ -10199,7 +10192,6 @@ Entities_TempleOfDroplets_NorthSmallKey_0:: @ 080E4E30
 	manager subtype=0x15, x=0x88, y=0x68, pool=0x8, paramA=0x2, paramB=0xfff8, paramC=0x5100a3
 	object_raw subtype=0x84, x=0x48, y=0x48, paramA=0x1, paramB=0x8, paramC=0x520000
 	ezlo_hint x=0x16, y=0x6, rx=0x3, ry=0x5, msg=0xb40, flag=0x53, flag2=0x50
-	ezlo_hint x=0x6, y=0x6, rx=0x4, ry=0x5, msg=0xb3f, flag=0x84
 	entity_list_end
 
 Enemies_TempleOfDroplets_NorthSmallKey:: @ 080E4EA0
@@ -12371,7 +12363,6 @@ Entities_PalaceOfWinds_GratesTo3F_0:: @ 080E9330
 	object_raw subtype=0x29, x=0x80, y=0xe0, paramA=0x8
 	object_raw subtype=0x29, x=0x140, y=0xe0, paramA=0x80
 	manager subtype=0x2c, x=0x80, paramB=0x4011670, paramC=0x500080
-	ezlo_hint x=0x42, y=0x2e, rx=0x7, ry=0x3, msg=0xb48, flag=0x65
 	object_raw subtype=0x16, x=0x60, y=0x180, collision=1, paramA=0x3, paramB=0x8
 	entity_list_end
 
@@ -15668,7 +15659,6 @@ gUnk_additional_f_HyruleTown_0:: @ 080EF0B0
 	delayed_entity_raw subtype=0x8, x=0x1f8, y=0x1b8, layer=1, paramB=0x8c, paramC=script_GuardPatrolling, conditions=0x200
 	delayed_entity_raw subtype=0x8, x=0x188, y=0x338, layer=1, paramB=0x8d, paramC=script_GuardPatrolling, conditions=0x200
 	delayed_entity_raw subtype=0x8, x=0x238, y=0x118, layer=1, paramB=0x8e, paramC=script_GuardPatrolling, conditions=0x200
-	delayed_entity_raw subtype=0x8, x=0x168, y=0xb8, layer=1, paramB=0x8f, paramC=script_GuardLibrary, conditions=0x200
 	delayed_entity_raw subtype=0x8, x=0x1f8, y=0x50, layer=1, paramB=0x90, paramC=script_GuardNorth, paramD=0x1, conditions=0xc
 	delayed_entity_raw subtype=0x8, x=0x48, y=0x2c8, layer=1, paramB=0x91, paramC=script_GuardPatrolling, conditions=0x20
 	delayed_entity_raw subtype=0x13, x=0x13b, y=0x2c8, layer=1, paramB=0x3, paramC=script_SittingPerson, paramD=0x1, conditions=0x3c0
@@ -22791,7 +22781,6 @@ Entities_CrenelCaves_HelmasaurHallway_0:: @ 080FBF3C
 	object_raw subtype=0x5, x=0x198, y=0x38, collision=1
 	object_raw subtype=0x5, x=0x208, y=0x48, collision=1
 	object_raw subtype=0x5, x=0x208, y=0x58, collision=1
-	ezlo_hint x=0x8, y=0x8, rx=0x8, ry=0x5, msg=0xb26, flag=0x86
 	entity_list_end
 
 Entities_CrenelCaves_HelmasaurHallway_1:: @ 080FBFFC

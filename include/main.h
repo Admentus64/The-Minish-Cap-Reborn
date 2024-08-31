@@ -15,6 +15,8 @@
 #define NUM_SAVE_SLOTS 3
 /** Maximum brightness. */
 #define MAX_BRIGHTNESS 3
+/** Maximum difficulty. */
+#define MAX_DIFFICULTY 3
 
 /** Supported game languages. */
 typedef enum {

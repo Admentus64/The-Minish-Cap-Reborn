@@ -430,10 +430,10 @@ void MiscManager_TypeE(MiscManager* this) {
 
 #if defined(USA) || defined(DEMO_USA) || defined(DEMO_JP)
 void MiscManager_TypeF(MiscManager* this) {
-    SetEntityPriority((Entity*)this, PRIO_PLAYER_EVENT);
+    /*SetEntityPriority((Entity*)this, PRIO_PLAYER_EVENT);
     if (gPlayerEntity.base.action == PLAYER_TALKEZLO) {
         DeleteThisEntity();
     }
-    gInput.heldKeys |= SELECT_BUTTON;
+    gInput.heldKeys |= SELECT_BUTTON;*/
 }
 #endif

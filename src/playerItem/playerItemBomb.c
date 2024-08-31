@@ -110,11 +110,13 @@ void PlayerItemBomb_Action1(PlayerItemBombEntity* this) {
     if (!sub_0800442E(super)) {
         RegisterCarryEntity(super);
     }
-    switch (IsItemEquipped(ITEM_REMOTE_BOMBS)) {
+    switch (IsSetItemEquipped(ITEM_REMOTE_BOMBS)) {
         case EQUIP_SLOT_A:
+        case EQUIP_SLOT_LA:
             input = INPUT_USE_ITEM1;
             break;
         case EQUIP_SLOT_B:
+        case EQUIP_SLOT_LB:
             input = INPUT_USE_ITEM2;
             break;
         case EQUIP_SLOT_NONE:

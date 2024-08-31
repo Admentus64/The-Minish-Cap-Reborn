@@ -222,6 +222,17 @@ s32 CalculateDamage(Entity* org, Entity* tgt) {
 
     if (org->kind == PLAYER) {
         damage = tgt->damage;
+        
+        switch (gSave.difficulty) {
+            case 1:
+            case 2:
+                damage *= 2;
+                break;
+            case 3:
+                damage *= 4;
+                break;
+        }
+        
         switch (gSave.stats.charm) {
             case BOTTLE_CHARM_NAYRU:
                 damage /= 4;
@@ -230,12 +241,15 @@ s32 CalculateDamage(Entity* org, Entity* tgt) {
                 damage /= 2;
                 break;
         }
+        
         if (damage <= 0)
             damage = 1;
+        
         health = ModHealth(-damage);
         SoundReqClipped(org, SFX_PLY_VO6);
     } else {
         damage = tgt->damage;
+        
         if (tgt->kind == PLAYER_ITEM) {
             switch (gSave.stats.charm) {
                 case BOTTLE_CHARM_FARORE:
@@ -246,6 +260,19 @@ s32 CalculateDamage(Entity* org, Entity* tgt) {
                     break;
             }
         }
+        
+        switch (gSave.difficulty) {
+            case 2:
+                damage /= 2;
+                break;
+            case 3:
+                damage /= 4;
+                break;
+        }
+        
+        if (damage <= 0)
+            damage = 1;
+        
         health = org->health - damage;
         if (org->kind == ENEMY) {
             if (((Enemy*)org)->enemyFlags & EM_FLAG_BOSS)
