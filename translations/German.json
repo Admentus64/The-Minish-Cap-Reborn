@@ -3850,7 +3850,7 @@
         "Wenn du alle Fragmente vereint hast,\ndie es gibt, wirst du reich belohnt!",
         "{Color:Green}Schloss Hyrule{Color:White} ist dunkel... Ist es\nzu spät zum {Color:Blue}Fragmente vereinen{Color:White}?",
         "...Aber! Wir sollten gerade jetzt\n{Color:Blue}Fragmente vereinen{Color:White}, um den...\n...Menschen Glück zu bringen...",
-        "",
+        "{Color:Blue}Helden-Modus{Color:White} schon ausprobiert?\nDrücke {Key:Left} bei der Dateiauswahl.\n{Color:Red}Erde:{Color:White} Original-Schwierigkeit.\n{Color:Red}Feuer:{Color:White} DEF 50{Symbol:12}, weniger {Symbol:0C}.\n{Color:Red}Wasser:{Color:White} STR {Symbol:0D} DEF 50{Symbol:12}, keine {Symbol:0C}.\n{Color:Red}Wind:{Color:White} STR {Symbol:0D} DEF 25{Symbol:12}, keine {Symbol:0C}.",
         "",
         "",
         "",

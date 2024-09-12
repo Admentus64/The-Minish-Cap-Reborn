@@ -19523,6 +19523,7 @@ Entities_HyruleField_SouthHyruleField_0:: @ 080F7018
 	object_raw subtype=0x0, x=0x278, y=0x198, paramA=0x56, paramB=0x700
 	object_raw subtype=0x0, x=0x288, y=0x198, paramA=0x56, paramB=0x700
 	object_raw subtype=0x0, x=0x298, y=0x198, paramA=0x56, paramB=0x700
+	npc_raw subtype=0x6, x=0x250, y=0x210, paramA=0x8, paramB=0x400, script=script_HeroModePerson
 	entity_list_end
 
 gUnk_080F7088:: @ 080F7088

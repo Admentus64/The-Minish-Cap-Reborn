@@ -3850,7 +3850,7 @@
         "Je me demande ce qui se passe si on\nassemble tous les fragments existants.\nÇa rapporte peut-être quelque chose\nde spécial!",
         "Le {Color:Green}Château d'Hyrule{Color:White} a sombré\ndans les ténèbres...\nIl y a peut-être mieux à faire\nqu'{Color:Blue}assembler des fragments{Color:White}...",
         "Quoique, à bien y réfléchir,\nc'est le moment ou jamais!\nLes {Color:Blue}assemblages de fragments{Color:White}\napportent le bonheur aux gens!",
-        "",
+        "Saviez-vous qu'il existe un {Color:Blue}Mode\ndifficile{Color:White}? Vous pouvez le changer dans\nles options du fichier avec {Key:Left}.\n\n{Color:Red}Terre:{Color:White} difficulté originale.\n{Color:Red}Fue:{Color:White} DEF 50{Symbol:12}, moins de {Symbol:0C}.\n{Color:Red}Eau:{Color:White} STR {Symbol:0D} DEF 50{Symbol:12}, pas de {Symbol:0C}.\n{Color:Red}Vent:{Color:White} STR {Symbol:0D} DEF 25{Symbol:12}, pas de {Symbol:0C}.",
         "",
         "",
         "",

@@ -592,3 +592,4 @@
 	.include "data/scripts/npc/script_ForestMinish20.inc"
 	.include "data/scripts/npc/script_ForestMinish21.inc"
 	.include "data/scripts/npc/script_TingleSiblings.inc"
+	.include "data/scripts/southHyruleField/script_HeroModePerson.inc"
